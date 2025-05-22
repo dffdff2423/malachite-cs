@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malachite.Analysis", "Malachite.Analysis\Malachite.Analysis.csproj", "{30E64BB6-AE59-43D6-B7E6-8ABD7B3A5639}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malachite.Tests", "Malachite.Tests\Malachite.Tests.csproj", "{C7FBCB3E-17F4-4D4B-A37A-C8E1C45BF4A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malachite.Core", "Malachite.Core\Malachite.Core.csproj", "{5A1E1773-83A5-4BE0-8900-C6442C7E405D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malachite.App", "Malachite.App\Malachite.App.csproj", "{8BB5273D-92EC-4BA2-88BB-C9F9F1DDE56B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{30E64BB6-AE59-43D6-B7E6-8ABD7B3A5639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30E64BB6-AE59-43D6-B7E6-8ABD7B3A5639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30E64BB6-AE59-43D6-B7E6-8ABD7B3A5639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30E64BB6-AE59-43D6-B7E6-8ABD7B3A5639}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7FBCB3E-17F4-4D4B-A37A-C8E1C45BF4A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7FBCB3E-17F4-4D4B-A37A-C8E1C45BF4A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7FBCB3E-17F4-4D4B-A37A-C8E1C45BF4A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7FBCB3E-17F4-4D4B-A37A-C8E1C45BF4A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A1E1773-83A5-4BE0-8900-C6442C7E405D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A1E1773-83A5-4BE0-8900-C6442C7E405D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A1E1773-83A5-4BE0-8900-C6442C7E405D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A1E1773-83A5-4BE0-8900-C6442C7E405D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BB5273D-92EC-4BA2-88BB-C9F9F1DDE56B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BB5273D-92EC-4BA2-88BB-C9F9F1DDE56B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BB5273D-92EC-4BA2-88BB-C9F9F1DDE56B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BB5273D-92EC-4BA2-88BB-C9F9F1DDE56B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,10 @@
+version = 1
+SPDX-PackageName = "Malachite"
+SPDX-PackageSupplier = "dffdff2423 <dffdff2423@gmail.com>"
+SPDX-PackageDownloadLocation = "https://github.com/dffdff2423/malachite"
+
+[[annotations]]
+path = [ "malachite-cs.sln", "malachite-cs.sln.DotSettings" ]
+# These files are not copyrightable, but reuse makes me specify it
+SPDX-FileCopyrightText = "None"
+SPDX-License-Identifier = "GPL-3.0-only"

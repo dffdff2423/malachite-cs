@@ -1,0 +1,20 @@
+<!--
+  SPDX-FileCopyrightText: (C) 2025 dffdff2423 <dffdff2423@gmail.com>
+
+  SPDX-License-Identifier: GPL-3.0-only
+-->
+
+<Project>
+    <PropertyGroup>
+        <BaseIntermediateOutputPath>$(SolutionDir)/obj/$(MSBuildProjectName)/</BaseIntermediateOutputPath>
+        <OutputPath>$(SolutionDir)/bin/$(MSBuildProjectName)/</OutputPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Malachite.Analysis/Malachite.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+            <PrivateAssets>all</PrivateAssets>
+        </ProjectReference>
+
+        <PackageVersion Include="ppy.SDL3-CS" Version="2025.220.0" />
+        <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />
+    </ItemGroup>
+</Project>
