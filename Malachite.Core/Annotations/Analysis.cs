@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: GPL-3.0-only
 
-using JetBrains.Annotations;
+// Needed because this file is used in the analyzer tests which do not have a global using for it.
+using System;
 
 namespace Malachite.Core.Annotations;
 
-[PublicAPI]
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class VirtualAttribute : Attribute;

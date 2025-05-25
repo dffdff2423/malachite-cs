@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malachite.Core", "Malachite
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malachite.App", "Malachite.App\Malachite.App.csproj", "{8BB5273D-92EC-4BA2-88BB-C9F9F1DDE56B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malachite.Analysis.Tests", "Malachite.Analysis.Tests\Malachite.Analysis.Tests.csproj", "{350804C4-169F-4A10-AA7C-4F4944477558}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,5 +35,9 @@ Global
 		{8BB5273D-92EC-4BA2-88BB-C9F9F1DDE56B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BB5273D-92EC-4BA2-88BB-C9F9F1DDE56B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BB5273D-92EC-4BA2-88BB-C9F9F1DDE56B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{350804C4-169F-4A10-AA7C-4F4944477558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{350804C4-169F-4A10-AA7C-4F4944477558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{350804C4-169F-4A10-AA7C-4F4944477558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{350804C4-169F-4A10-AA7C-4F4944477558}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
