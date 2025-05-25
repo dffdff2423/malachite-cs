@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: GPL-3.0-only
 
-using JetBrains.Annotations;
-
 using Malachite.Core.Maths;
 
 using SDL;

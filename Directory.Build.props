@@ -8,11 +8,13 @@
     <PropertyGroup>
         <BaseIntermediateOutputPath>$(SolutionDir)/obj/$(MSBuildProjectName)/</BaseIntermediateOutputPath>
         <OutputPath>$(SolutionDir)/bin/$(MSBuildProjectName)/</OutputPath>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../Malachite.Analysis/Malachite.Analysis.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
-            <PrivateAssets>all</PrivateAssets>
-        </ProjectReference>
+        <ProjectReference  Include="../Malachite.Analysis/Malachite.Analysis.csproj"
+                           OutputItemType="Analyzer"
+                           ReferenceOutputAssembly="false"
+                           PrivateAssets="all" />
 
         <PackageVersion Include="ppy.SDL3-CS" Version="2025.220.0" />
         <PackageVersion Include="JetBrains.Annotations" Version="2024.3.0" />

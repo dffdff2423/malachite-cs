@@ -2,15 +2,19 @@
 //
 // SPDX-License-Identifier: GPL-3.0-only
 
-using Malachite.App.Graphics.SDL;
-using Malachite.Core.Maths;
+using Malachite.App.Graphics;
 
 namespace Malachite.App;
 
 internal static class Program {
     private static void Main(string[] _) {
-        using var app = new SDLApplication();
-        using var dev = new SDLDevice();
-        var window = dev.CreateAssociatedWindow(ApplicationInfo.Name, new Vector2i(1440, 720));
+        using var gfx = new GraphicsContext();
+
+        bool shouldQuit = false;
+        gfx.ShouldQuitApp += () => shouldQuit = true;
+
+        while (!shouldQuit) {
+            gfx.ProcessEvents();
+        }
     }
 }

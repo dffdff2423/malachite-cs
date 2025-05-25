@@ -29,23 +29,50 @@ public sealed class SDLApplication : IDisposable {
             throw SDLException.FromLastError("Failed to set app metadata");
     }
 
-    // ReSharper disable once UnusedParameter.Local
-    private void Dispose(bool disposing) {
+    ~SDLApplication() {
+        Dispose();
+    }
+
+    public void Dispose() {
         if (_disposed)
             return;
 
         SDL_Quit();
 
         _disposed = true;
-    }
-
-    ~SDLApplication() {
-        Dispose(disposing: false);
-    }
-
-    public void Dispose() {
-        Dispose(disposing: true);
 
         GC.SuppressFinalize(this);
+    }
+
+    public event Action? ShouldQuit;
+    public event Action<SDL_WindowID>? WindowShouldCLose;
+
+    /// <summary>
+    /// Processes all SDL events, triggers any relevant events on this class.
+    /// </summary>
+    public unsafe void ProcessEvents() {
+        SDL_Event evt;
+        while (SDL_PollEvent(&evt)) {
+            switch (evt.Type) {
+            case SDL_EventType.SDL_EVENT_QUIT:
+                ShouldQuit?.Invoke();
+                break;
+            case SDL_EventType.SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+                WindowShouldCLose?.Invoke(evt.window.windowID);
+                break;
+            case SDL_EventType.SDL_EVENT_KEY_UP:
+                var key = evt.key.key;
+                var mod = evt.key.mod;
+                switch (Input.KeyActions[new KeyBind(key, mod)]) {
+                case InputEvent.ShouldCloseApp:
+                    ShouldQuit?.Invoke();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+                }
+
+                break;
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ using static SDL.SDL3;
 namespace Malachite.App.Graphics.SDL;
 
 /// <summary>
-/// An exception representing the an error from SDL.
+/// An exception representing an error from SDL.
 /// </summary>
 public sealed class SDLException : Exception {
     private SDLException(string message) : base(message) { }
@@ -24,5 +24,5 @@ public sealed class SDLException : Exception {
         var message = SDL_GetError();
         SDL_ClearError();
         return new SDLException($"{context}: {message ?? "No SDL Error"}");
-}
+    }
 }

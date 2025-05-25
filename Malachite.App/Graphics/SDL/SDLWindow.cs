@@ -15,7 +15,7 @@ namespace Malachite.App.Graphics.SDL;
 /// </summary>
 public sealed unsafe class SDLWindow : IDisposable {
     private bool _disposed;
-    public SDL_Window* Handle;
+    public SDL_Window* Handle { get; private set; }
 
     /// <summary>
     /// Create a new window using the SDL api.
@@ -30,8 +30,11 @@ public sealed unsafe class SDLWindow : IDisposable {
             throw SDLException.FromLastError($"Failed to create window \"{title}\" with extent ({extent.X}, {extent.Y})");
     }
 
-    // ReSharper disable once UnusedParameter.Local
-    private void Dispose(bool disposing) {
+    ~SDLWindow() {
+        Dispose();
+    }
+
+    public void Dispose() {
         if (_disposed)
             return;
 
@@ -39,15 +42,10 @@ public sealed unsafe class SDLWindow : IDisposable {
         Handle = null;
 
         _disposed = true;
-    }
-
-    ~SDLWindow() {
-        Dispose(disposing: false);
-    }
-
-    public void Dispose() {
-        Dispose(disposing: true);
-
         GC.SuppressFinalize(this);
+    }
+
+    public SDL_WindowID Id() {
+        return SDL_GetWindowID(Handle);
     }
 }
