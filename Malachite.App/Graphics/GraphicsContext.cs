@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-only
 
+using System.Drawing;
+
 using Malachite.App.Graphics.SDL;
 using Malachite.Core.Maths;
 
@@ -44,5 +46,18 @@ public sealed class GraphicsContext : IDisposable {
 
     public void ProcessEvents() {
         _app.ProcessEvents();
+    }
+
+    public void Draw() {
+        var cmd = _dev.AcquireCommandBuffer();
+        {
+            var text = cmd.WaitAndAcquireSwapchainTexture(_mainWindow);
+            var pass = cmd.BeginRenderPass([new RenderTargetSpec(Texture: text, ClearColor: Color.Aquamarine)]);
+            {
+                // TODO
+            }
+            pass.End();
+        }
+        cmd.Submit();
     }
 }

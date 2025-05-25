@@ -15,6 +15,7 @@ internal static class Program {
 
         while (!shouldQuit) {
             gfx.ProcessEvents();
+            gfx.Draw();
         }
     }
 }

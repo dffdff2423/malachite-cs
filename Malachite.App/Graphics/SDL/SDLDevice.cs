@@ -15,7 +15,7 @@ namespace Malachite.App.Graphics.SDL;
 /// </summary>
 public sealed unsafe class SDLDevice : IDisposable {
     private bool _disposed;
-    private SDL_GPUDevice* _device;
+    private SDL_GPUDevice* _handle;
     private readonly List<SDLWindow> _associatedWindows = [];
 
     /// <summary>
@@ -25,8 +25,8 @@ public sealed unsafe class SDLDevice : IDisposable {
     /// <exception cref="SDLException">Upon failing to create the device</exception>
     public SDLDevice(SDL_GPUShaderFormat availableShaders = SDL_GPUShaderFormat.SDL_GPU_SHADERFORMAT_SPIRV) {
         // We only allow vulkan here because I only have a linux system so I can't test other APIs.
-        _device = SDL_CreateGPUDevice(availableShaders, ApplicationInfo.Debug, "vulkan");
-        if (_device == null)
+        _handle = SDL_CreateGPUDevice(availableShaders, ApplicationInfo.Debug, "vulkan");
+        if (_handle == null)
             throw SDLException.FromLastError("Failed to create Device");
     }
 
@@ -35,11 +35,11 @@ public sealed unsafe class SDLDevice : IDisposable {
         if (_disposed)
             return;
 
-        SDL_DestroyGPUDevice(_device);
-        _device = null;
+        SDL_DestroyGPUDevice(_handle);
+        _handle = null;
 
         foreach (var win in _associatedWindows) {
-            SDL_ReleaseWindowFromGPUDevice(_device, win.Handle);
+            SDL_ReleaseWindowFromGPUDevice(_handle, win.Handle);
         }
 
         if (disposing) {
@@ -68,9 +68,16 @@ public sealed unsafe class SDLDevice : IDisposable {
     public SDLWindow CreateAssociatedWindow(string title, Vector2i extent, SDL_WindowFlags flags = 0) {
         var window = new SDLWindow(title, extent, flags);
         _associatedWindows.Add(window);
-        if (!SDL_ClaimWindowForGPUDevice(_device, window.Handle))
+        if (!SDL_ClaimWindowForGPUDevice(_handle, window.Handle))
             throw SDLException.FromLastError("Failed to bind window to device");
 
         return window;
+    }
+
+    public SDLCommandBuffer AcquireCommandBuffer() {
+        var buf = SDL_AcquireGPUCommandBuffer(_handle);
+        if (buf == null)
+            throw SDLException.FromLastError("Failed to acquire command buffer");
+        return new SDLCommandBuffer(buf);
     }
 }

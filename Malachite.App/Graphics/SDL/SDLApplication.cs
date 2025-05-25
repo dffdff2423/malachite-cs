@@ -61,9 +61,11 @@ public sealed class SDLApplication : IDisposable {
                 WindowShouldCLose?.Invoke(evt.window.windowID);
                 break;
             case SDL_EventType.SDL_EVENT_KEY_UP:
-                var key = evt.key.key;
-                var mod = evt.key.mod;
-                switch (Input.KeyActions[new KeyBind(key, mod)]) {
+                var bind = new KeyBind(evt.key.key, evt.key.mod);
+                if (!Input.KeyActions.TryGetValue(bind, out var action))
+                    break;
+
+                switch (action) {
                 case InputEvent.ShouldCloseApp:
                     ShouldQuit?.Invoke();
                     break;
