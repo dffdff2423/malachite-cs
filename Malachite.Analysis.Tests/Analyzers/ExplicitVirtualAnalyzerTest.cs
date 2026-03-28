@@ -10,14 +10,14 @@ using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 
-using Xunit;
+using NUnit.Framework;
 
 using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<Malachite.Analysis.Analyzers.ExplicitVirtualAnalyzer, Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
 
 namespace Malachite.Analysis.Tests.Analyzers;
 
 public sealed class ExplicitVirtualAnalyzerTest {
-    [Fact]
+    [Test]
     public async Task RecordNoAnnotation() {
         const string test = "record C {}";
         DiagnosticResult[] expected = [
@@ -26,7 +26,7 @@ public sealed class ExplicitVirtualAnalyzerTest {
         await Verify.VerifyAnalyzerAsync(test, expected);
     }
 
-    [Fact]
+    [Test]
     public async Task ClassNoAnnotation() {
         const string test = "class C {}";
         DiagnosticResult[] expected = [
@@ -35,7 +35,7 @@ public sealed class ExplicitVirtualAnalyzerTest {
         await Verify.VerifyAnalyzerAsync(test, expected);
     }
 
-    [Fact]
+    [Test]
     public async Task ClassWithAnnotation() {
         var ctx = new CSharpAnalyzerTest<ExplicitVirtualAnalyzer, DefaultVerifier>();
         {
@@ -61,7 +61,7 @@ public sealed class ExplicitVirtualAnalyzerTest {
         await ctx.RunAsync();
     }
 
-    [Fact]
+    [Test]
     public async Task RecordWithAnnotation() {
         var ctx = new CSharpAnalyzerTest<ExplicitVirtualAnalyzer, DefaultVerifier>();
         {
