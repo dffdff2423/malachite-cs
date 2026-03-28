@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: GPL-3.0-only
 
+using Malachite.App.Graphics.SPIRV;
 using Malachite.Core.Maths;
 
 using SDL;
@@ -17,6 +18,9 @@ public sealed unsafe class SDLDevice : IDisposable {
     private bool _disposed;
     private SDL_GPUDevice* _handle;
     private readonly List<SDLWindow> _associatedWindows = [];
+    // We just let the device clean up pipelines/shaders for now. This is not a AAA game.
+    private readonly List<SDLShader> _shaders = [];
+    private readonly List<SDLGraphicsPipeline> _graphicsPipelines = [];
 
     /// <summary>
     /// Creates a device using SDL API calls
@@ -35,13 +39,21 @@ public sealed unsafe class SDLDevice : IDisposable {
         if (_disposed)
             return;
 
-        SDL_DestroyGPUDevice(_handle);
-        _handle = null;
+        foreach (var pipe in _graphicsPipelines) {
+            SDL_ReleaseGPUGraphicsPipeline(_handle, pipe.Handle);
+        }
+
+        foreach (var shader in _shaders) {
+            SDL_ReleaseGPUShader(_handle, shader.Handle);
+        }
 
         foreach (var win in _associatedWindows) {
             SDL_ReleaseWindowFromGPUDevice(_handle, win.Handle);
         }
 
+        SDL_DestroyGPUDevice(_handle);
+        _handle = null;
+        
         if (disposing) {
             foreach (var win in _associatedWindows) {
                 win.Dispose();
@@ -79,5 +91,37 @@ public sealed unsafe class SDLDevice : IDisposable {
         if (buf == null)
             throw SDLException.FromLastError("Failed to acquire command buffer");
         return new SDLCommandBuffer(buf);
+    }
+
+    public SDLShader CreateShader(ShaderFile file) {
+        fixed (byte* data = file.Code, entryPoint = file.EntryPoint) {
+            var info = new SDL_GPUShaderCreateInfo {
+                code_size = (UIntPtr)file.Code.Length,
+                code = data,
+                entrypoint = entryPoint,
+                format = file.Format,
+                num_samplers = file.NumSamplers,
+                num_storage_buffers = file.NumStorageBuffers,
+                num_storage_textures = file.NumStorageTextures,
+                num_uniform_buffers = file.NumUniformBuffers,
+                props = 0,
+                stage = file.Stage,
+            };
+            var handle = SDL_CreateGPUShader(_handle, &info);
+            if (handle == null)
+                throw SDLException.FromLastError("Failed to create shader");
+            var shader = new SDLShader { Handle = handle };
+            _shaders.Add(shader);
+            return shader;
+        }
+    }
+
+    public SDLGraphicsPipeline CreateGraphicsPipeline(SDL_GPUGraphicsPipelineCreateInfo info) {
+        var handle = SDL_CreateGPUGraphicsPipeline(_handle, &info);
+        if (handle == null)
+            throw SDLException.FromLastError("Failed to create graphics pipeline");
+        var pipe = new SDLGraphicsPipeline { Handle = handle };
+        _graphicsPipelines.Add(pipe);
+        return pipe;
     }
 }

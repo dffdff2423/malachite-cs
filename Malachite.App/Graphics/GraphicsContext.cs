@@ -5,20 +5,29 @@
 using System.Drawing;
 
 using Malachite.App.Graphics.SDL;
+using Malachite.App.Graphics.SPIRV;
 using Malachite.Core.Maths;
+using Malachite.Core.Resources;
+
+using SDL;
 
 namespace Malachite.App.Graphics;
 
 public sealed class GraphicsContext : IDisposable {
     private bool _disposed;
 
+    private readonly ResourceLoader _loader;
+
     private readonly SDLApplication _app;
     private readonly SDLDevice _dev;
     private readonly SDLWindow _mainWindow;
 
+    private readonly SDLGraphicsPipeline _trianglePipeline = default!; // TODO
+
     public event Action? ShouldQuitApp;
 
-    public GraphicsContext() {
+    public GraphicsContext(ResourceLoader resourceLoader) {
+        _loader = resourceLoader;
         _app = new SDLApplication();
         _dev = new SDLDevice();
         _mainWindow = _dev.CreateAssociatedWindow(ApplicationInfo.Name, new Vector2i(1440, 720));
@@ -32,6 +41,14 @@ public sealed class GraphicsContext : IDisposable {
                 ShouldQuitApp?.Invoke();
             }
         };
+
+        var testvertBytes = _loader.GetBytes("spirv/triangle.vert.spv");
+        var testvert = _dev.CreateShader(new ShaderFile
+            { Code = testvertBytes, Stage = SDL_GPUShaderStage.SDL_GPU_SHADERSTAGE_VERTEX });
+
+        var testfragBytes = _loader.GetBytes("spirv/triangle.frag.spv");
+        var testfrag = _dev.CreateShader(new ShaderFile
+            { Code = testfragBytes, Stage = SDL_GPUShaderStage.SDL_GPU_SHADERSTAGE_FRAGMENT });
     }
 
     public void Dispose() {

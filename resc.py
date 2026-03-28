@@ -15,7 +15,7 @@ def compile_shader(res_root: str, path: str, filename: str) -> None:
     spirv_path = os.path.join(res_root, 'spirv')
     if not os.path.isdir(spirv_path):
         os.mkdir(spirv_path)
-    cmd: list[str] = ['glslc', '--target-env=vulkan1.4', path, '-o', os.path.join(spirv_path, filename) + '.spv']
+    cmd: list[str] = ['glslc', '--target-env=vulkan1.0', path, '-o', os.path.join(spirv_path, filename) + '.spv']
     if debug:
         cmd.append('-g')
     else:

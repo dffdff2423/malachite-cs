@@ -10,6 +10,8 @@ namespace Malachite.Core.Resources;
 
 [PublicAPI]
 public sealed class ResourceLoader {
+    private FileInfo _resRoot;
+
     public ResourceLoader(FileInfo resRoot) {
         _resRoot = resRoot;
         var attr = _resRoot.Attributes;
@@ -17,8 +19,8 @@ public sealed class ResourceLoader {
             throw new IOException($"Provided resource path root `{_resRoot}` is not a directory");
     }
 
-    private FileInfo _resRoot;
-
+    public byte[] GetBytes(ResPath path)
+        => File.ReadAllBytes(Path.Join(_resRoot.Name, path.Path));
 }
 
 /// <summary>
@@ -26,32 +28,19 @@ public sealed class ResourceLoader {
 /// </summary>
 [PublicAPI]
 public sealed class ResPath {
+    public string Path { get; init; }
+
     /// <summary>
     /// Create a ResPath from a path separated with /
     /// </summary>
     public ResPath(string path) {
-        Debug.Assert(!path.EndsWith('/'), message: "ResPaths should always point to a file and should not end in a /");
-        Segments = path.Split('/');
-        Debug.Assert(Segments.Length > 0);
+        Path = path;
     }
 
-    /// <summary>
-    /// Create a ResPath from segments
-    /// </summary>
-    public ResPath(string[] segments) {
-        Segments = segments;
-        Debug.Assert(Segments.Length > 0);
+    private void AssertVaid() {
+        Debug.Assert(!Path.EndsWith('/'), message: "ResPaths should always point to a file and should not end in a /");
+        Debug.Assert(!Path.StartsWith('/'), message: "ResPaths should not include a leading slash");
     }
 
     public static implicit operator ResPath(string path) => new(path);
-
-    /// <summary>
-    /// The last segment of the path
-    /// </summary>
-    public string Filename => Segments.Last();
-
-    /// <summary>
-    /// The segments that make up the ResPath
-    /// </summary>
-    public readonly string[] Segments;
 }

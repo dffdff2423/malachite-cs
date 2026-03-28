@@ -8,6 +8,7 @@
     <PropertyGroup>
         <BaseIntermediateOutputPath>$(SolutionDir)/obj/$(MSBuildProjectName)/</BaseIntermediateOutputPath>
         <OutputPath>$(SolutionDir)/bin/$(MSBuildProjectName)/</OutputPath>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference  Include="../Malachite.Analysis/Malachite.Analysis.csproj"

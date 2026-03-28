@@ -23,7 +23,7 @@ internal static class Program {
         cmd.SetHandler(resDir => {
             var resLoader = new ResourceLoader(resDir);
 
-            using var gfx = new GraphicsContext();
+            using var gfx = new GraphicsContext(resLoader);
 
             bool shouldQuit = false;
             gfx.ShouldQuitApp += () => shouldQuit = true;
