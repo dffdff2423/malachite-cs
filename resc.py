@@ -5,6 +5,7 @@
 
 import argparse
 import os
+import shutil
 import subprocess
 
 glsl_ext = ['.vert', '.frag']
@@ -29,6 +30,10 @@ def compile_dir(dir: str) -> None:
                 if file.endswith(ext):
                     compile_shader(dir, os.path.join(root, file), file)
 
+def clean(dir: str) -> None:
+    shutil.rmtree(dir + '/spirv', ignore_errors=True)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
             prog='resc',
@@ -37,9 +42,22 @@ if __name__ == '__main__':
     parser.add_argument('-g', '--debug-mode', action='store_true', default='false',
                         help="Compile with any applicable debug info")
     parser.add_argument('--glslc', default='glslc', help="glslc program from shaderc")
+    parser.add_argument('operation', default='build', help="what operation to do: build or clean")
 
     args = parser.parse_args();
     dirroot = args.res_dir;
-    debug = args.debug_mode
+    debug = args.debug_mode;
+    opt = args.operation;
+    clean_only = False
+    if opt == 'clean':
+        clean_only = True
+    elif opt == 'build':
+        pass
+    else:
+        print("Allowed options: clean, build. No option means build")
+        exit(1)
 
+    clean(dirroot)
+    if clean_only:
+        exit(0)
     compile_dir(dirroot)
