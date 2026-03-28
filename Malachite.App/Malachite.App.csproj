@@ -15,6 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="ppy.SDL3-CS" />
+        <PackageReference Include="System.CommandLine" />
         <ProjectReference Include="..\Malachite.Core\Malachite.Core.csproj" />
     </ItemGroup>
 </Project>

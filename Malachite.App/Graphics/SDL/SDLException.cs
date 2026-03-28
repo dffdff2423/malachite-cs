@@ -19,7 +19,6 @@ public sealed class SDLException : Exception {
     /// Creates a SDLException of the last error, or the text "No SDL Error" if there is no one.
     /// </summary>
     /// <returns>The created exception</returns>
-    [Pure]
     public static SDLException FromLastError(string context) {
         var message = SDL_GetError();
         SDL_ClearError();

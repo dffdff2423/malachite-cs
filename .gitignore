@@ -6,3 +6,7 @@
 bin
 obj
 *.user
+.*cache
+
+# compiled resources
+res/spirv

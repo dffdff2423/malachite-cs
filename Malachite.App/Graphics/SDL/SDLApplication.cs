@@ -61,7 +61,10 @@ public sealed class SDLApplication : IDisposable {
                 WindowShouldCLose?.Invoke(evt.window.windowID);
                 break;
             case SDL_EventType.SDL_EVENT_KEY_UP:
-                var bind = new KeyBind(evt.key.key, evt.key.mod);
+                var mod = evt.key.mod;
+                // We don't care about scroll lock and numlock
+                mod &= ~(SDL_Keymod.SDL_KMOD_SCROLL | SDL_Keymod.SDL_KMOD_NUM);
+                var bind = new KeyBind(evt.key.key, mod);
                 if (!Input.KeyActions.TryGetValue(bind, out var action))
                     break;
 

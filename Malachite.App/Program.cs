@@ -2,20 +2,37 @@
 //
 // SPDX-License-Identifier: GPL-3.0-only
 
+using System.CommandLine;
+
 using Malachite.App.Graphics;
+using Malachite.Core.Resources;
 
 namespace Malachite.App;
 
 internal static class Program {
-    private static void Main(string[] _) {
-        using var gfx = new GraphicsContext();
+    private static void Main(string[] argv) {
+        var cmd = new RootCommand("Malachite game");
 
-        bool shouldQuit = false;
-        gfx.ShouldQuitApp += () => shouldQuit = true;
+        var resDirOpt = new Option<FileInfo>(
+            name: "--res-dir",
+            description: "Path to the resource directory",
+            getDefaultValue: () => new FileInfo("./res"));
+        resDirOpt.AddAlias("-r");
+        cmd.Add(resDirOpt);
 
-        while (!shouldQuit) {
-            gfx.ProcessEvents();
-            gfx.Draw();
-        }
+        cmd.SetHandler(resDir => {
+            var resLoader = new ResourceLoader(resDir);
+
+            using var gfx = new GraphicsContext();
+
+            bool shouldQuit = false;
+            gfx.ShouldQuitApp += () => shouldQuit = true;
+
+            while (!shouldQuit) {
+                gfx.ProcessEvents();
+                gfx.Draw();
+            }
+        }, resDirOpt);
+        cmd.Invoke(argv);
     }
 }
