@@ -33,7 +33,6 @@ def compile_dir(dir: str) -> None:
 def clean(dir: str) -> None:
     shutil.rmtree(dir + '/spirv', ignore_errors=True)
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
             prog='resc',

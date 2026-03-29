@@ -43,9 +43,7 @@ public sealed unsafe class SDLDevice : IDisposable {
             SDL_ReleaseGPUGraphicsPipeline(_handle, pipe.Handle);
         }
 
-        foreach (var shader in _shaders) {
-            SDL_ReleaseGPUShader(_handle, shader.Handle);
-        }
+        DisposeAllShaders();
 
         foreach (var win in _associatedWindows) {
             SDL_ReleaseWindowFromGPUDevice(_handle, win.Handle);
@@ -53,7 +51,7 @@ public sealed unsafe class SDLDevice : IDisposable {
 
         SDL_DestroyGPUDevice(_handle);
         _handle = null;
-        
+
         if (disposing) {
             foreach (var win in _associatedWindows) {
                 win.Dispose();
@@ -86,6 +84,9 @@ public sealed unsafe class SDLDevice : IDisposable {
         return window;
     }
 
+    public SDL_GPUTextureFormat GetSwapchainFormat(SDLWindow win)
+        => SDL_GetGPUSwapchainTextureFormat(_handle, win.Handle);
+
     public SDLCommandBuffer AcquireCommandBuffer() {
         var buf = SDL_AcquireGPUCommandBuffer(_handle);
         if (buf == null)
@@ -116,12 +117,39 @@ public sealed unsafe class SDLDevice : IDisposable {
         }
     }
 
-    public SDLGraphicsPipeline CreateGraphicsPipeline(SDL_GPUGraphicsPipelineCreateInfo info) {
-        var handle = SDL_CreateGPUGraphicsPipeline(_handle, &info);
-        if (handle == null)
-            throw SDLException.FromLastError("Failed to create graphics pipeline");
-        var pipe = new SDLGraphicsPipeline { Handle = handle };
-        _graphicsPipelines.Add(pipe);
-        return pipe;
+    /// <summary>
+    /// All shader objects will be invalid after this is called. This method exists since we don't need them anymore
+    /// after pipelines are created
+    /// </summary>
+    public void DisposeAllShaders() {
+        foreach (var shader in _shaders) {
+            SDL_ReleaseGPUShader(_handle, shader.Handle);
+        }
+        _shaders.Clear();
+    }
+
+    public SDLGraphicsPipeline CreateGraphicsPipeline(SDLGraphicsPipelineCreateInfo info) {
+        fixed (SDL_GPUColorTargetDescription* descr = info.ColorTargetDescriptions) {
+            var nativeInfo = new SDL_GPUGraphicsPipelineCreateInfo {
+                vertex_shader = info.Vertex.Handle,
+                fragment_shader = info.Fragment.Handle,
+                primitive_type = info.PrimitiveType,
+                rasterizer_state = info.RasterizerState,
+                multisample_state = info.MultisampleState,
+                depth_stencil_state = info.DepthStencilState,
+                target_info = new SDL_GPUGraphicsPipelineTargetInfo {
+                    color_target_descriptions = descr,
+                    num_color_targets = (uint)info.ColorTargetDescriptions.Length,
+                    has_depth_stencil_target = info.DepthStencilFormat != null,
+                    depth_stencil_format = info.DepthStencilFormat ?? 0,
+                },
+            };
+            var handle = SDL_CreateGPUGraphicsPipeline(_handle, &nativeInfo);
+            if (handle == null)
+                throw SDLException.FromLastError("Failed to create graphics pipeline");
+            var pipe = new SDLGraphicsPipeline { Handle = handle };
+            _graphicsPipelines.Add(pipe);
+            return pipe;
+        }
     }
 }

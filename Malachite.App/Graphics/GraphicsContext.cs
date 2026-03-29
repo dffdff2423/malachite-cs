@@ -22,7 +22,7 @@ public sealed class GraphicsContext : IDisposable {
     private readonly SDLDevice _dev;
     private readonly SDLWindow _mainWindow;
 
-    private readonly SDLGraphicsPipeline _trianglePipeline = default!; // TODO
+    private readonly SDLGraphicsPipeline _trianglePipeline;
 
     public event Action? ShouldQuitApp;
 
@@ -49,6 +49,18 @@ public sealed class GraphicsContext : IDisposable {
         var testfragBytes = _loader.GetBytes("spirv/triangle.frag.spv");
         var testfrag = _dev.CreateShader(new ShaderFile
             { Code = testfragBytes, Stage = SDL_GPUShaderStage.SDL_GPU_SHADERSTAGE_FRAGMENT });
+
+        _trianglePipeline = _dev.CreateGraphicsPipeline(new SDLGraphicsPipelineCreateInfo {
+            Vertex = testvert,
+            Fragment = testfrag,
+            ColorTargetDescriptions = [
+                new SDL_GPUColorTargetDescription {
+                    format = _dev.GetSwapchainFormat(_mainWindow),
+                },
+            ],
+        });
+
+        _dev.DisposeAllShaders();
     }
 
     public void Dispose() {
@@ -71,7 +83,8 @@ public sealed class GraphicsContext : IDisposable {
             var text = cmd.WaitAndAcquireSwapchainTexture(_mainWindow);
             var pass = cmd.BeginRenderPass([new RenderTargetSpec(Texture: text, ClearColor: Color.Aquamarine)]);
             {
-                // TODO
+                pass.BindPipeline(_trianglePipeline);
+                pass.DrawPrimitives(3, 1, 0, 0);
             }
             pass.End();
         }
